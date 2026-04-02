@@ -1,8 +1,11 @@
 ﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Numerics;
+using System.Xml;
 using System.Xml.Linq;
 using static System.Formats.Asn1.AsnWriter;
 using static System.Net.Mime.MediaTypeNames;
@@ -47,7 +50,7 @@ namespace G_NET_26_Advanced_03
             //Step 4: First grade above 90 
             int firstAbove90 = grades.Find(x => x > 90);
             Console.WriteLine("\n=== First Grade Above 90 ===");
-            Console.WriteLine($"Grade  : {(firstAbove90 > 0 ? firstAbove90.ToString() : "None found")}" );
+            Console.WriteLine($"Grade  : {(firstAbove90 > 0 ? firstAbove90.ToString() : "None found")}");
 
             //Step 5: All failing grades (below 75) 
             List<int> failingGrades = grades.FindAll(x => x < 75);
@@ -66,7 +69,7 @@ namespace G_NET_26_Advanced_03
 
             //Step 7: Check if any grade equals 100 
             Console.WriteLine("\n=== Check if any grade equals 100 ===");
-            Console.WriteLine($"Has 100: {grades.Contains(100) } " );
+            Console.WriteLine($"Has 100: {grades.Contains(100)} ");
 
             //Step 8: Convert to List<string> 
             List<string> gradeLabels = grades.ConvertAll(x => $"Grade:{x}");
@@ -161,8 +164,8 @@ namespace G_NET_26_Advanced_03
 
             //Step 4: Try adding a duplicate with .TryAdd() 
             Console.WriteLine("\n=== TryAdd() Duplicate ===");
-            bool added = phoneBook.TryAdd("Ali", "00000000000"); 
-            Console.WriteLine($" TryAdd(\"Ali\"): {added}");   
+            bool added = phoneBook.TryAdd("Ali", "00000000000");
+            Console.WriteLine($" TryAdd(\"Ali\"): {added}");
 
             //Step 5: Search for a contact that doesn't exist 
             Console.WriteLine("\n=== Search: Does 'Omar' Exist? ===");
@@ -180,10 +183,75 @@ namespace G_NET_26_Advanced_03
 
             //Step 7: Print all Keys then all Values 
             Console.WriteLine("\n=== All Keys ===");
-            Console.WriteLine( string.Join(", ", phoneBook.Keys));
+            Console.WriteLine(string.Join(", ", phoneBook.Keys));
 
             Console.WriteLine("\n=== All Values ===");
-            Console.WriteLine( string.Join(", ", phoneBook.Values));
+            Console.WriteLine(string.Join(", ", phoneBook.Values));
+            #endregion
+
+            #region Exercise 4: Unique Email Validator
+            //Use Collection to manage unique email addresses.
+            //1-Create a HashSet<string> with a case -insensitive comparer: new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            //2-Add these emails: "ahmed@test.com", "AHMED@test.com", "sara@test.com", "Sara@Test.Com"
+            //3-Print Count — how many are actually stored? Explain why.
+            //4-Create two sets: Set A = { 1, 2, 3, 4, 5 } and Set B = { 4,5,6,7,8}
+            //5-Print the result of: UnionWith, IntersectWith, ExceptWith
+            //6-Use IsSubsetOf to check if { 1,2} is a subset of Set A
+
+            //Step 1 & 2: Create HashSet with case-insensitive comparer & add emails 
+            HashSet<string> emails = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            emails.Add("ahmed@test.com");
+            emails.Add("AHMED@test.com");   // duplicate of ahmed@test.com (case-insensitive)
+            emails.Add("sara@test.com");
+            emails.Add("Sara@Test.Com");    // duplicate of sara@test.com  (case-insensitive)
+
+            Console.WriteLine("\n=== Stored Emails ===");
+            foreach (string email in emails)
+                Console.WriteLine($" {email}");
+
+            //Step 3: Print Count and explain 
+            Console.WriteLine($"\n=== Count: {emails.Count} ===");
+            /*Only 2 emails are stored because HashSet does not allow duplicates.
+              With OrdinalIgnoreCase, 'AHMED@test.com' is treated the same as 'ahmed@test.com', 
+              and Sara@Test.Com' is treated the same as 'sara@test.com'.
+            */
+            Console.WriteLine("""
+                                Only 2 emails are stored because HashSet does not allow duplicates.
+                                With OrdinalIgnoreCase, 'AHMED@test.com' is treated the same as 'ahmed@test.com', 
+                                and Sara@Test.Com' is treated the same as 'sara@test.com'.
+                                """);
+
+            //Step 4: Create Set A and Set B 
+            HashSet<int> setA = new HashSet<int> { 1, 2, 3, 4, 5 };
+            HashSet<int> setB = new HashSet<int> { 4, 5, 6, 7, 8 };
+
+            Console.WriteLine("\n=== Set A: { 1, 2, 3, 4, 5 } ===");
+            Console.WriteLine("=== Set B: { 4, 5, 6, 7, 8 } ===");
+
+            //Step 5a: UnionWith 
+            HashSet<int> union = [.. setA];
+            union.UnionWith(setB);
+            Console.Write("\n  Union (A | B)    : ");
+            PrintCollection(union);        
+
+            //Step 5b: IntersectWith 
+            HashSet<int> intersect = [.. setA];
+            intersect.IntersectWith(setB);
+            Console.Write("\n  Intersect (A & B): ");
+            PrintCollection(intersect);            
+
+            //Step 5c: ExceptWith 
+            HashSet<int> except = [.. setA];
+            except.ExceptWith(setB);
+            Console.Write("\n  Except (A - B)   : ");
+            PrintCollection(except);
+
+            //Step 6: IsSubsetOf — check if {1,2} is a subset of Set A 
+            HashSet<int> small = [1, 2];
+            Console.WriteLine($"\n=== Is {{1,2}} a subset of Set A? ===");
+            Console.WriteLine($"  IsSubsetOf(setA): {small.IsSubsetOf(setA)}");
+
             #endregion
         }
     }
