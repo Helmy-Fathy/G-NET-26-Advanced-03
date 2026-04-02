@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Numerics;
+using static System.Formats.Asn1.AsnWriter;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace G_NET_26_Advanced_03
@@ -66,6 +69,50 @@ namespace G_NET_26_Advanced_03
             Console.WriteLine("\n=== Grade Labels ===");
             PrintCollection(gradeLabels);
 
+            #endregion
+
+            #region Exercise 2: Leaderboard
+            //Create a leaderboard that automatically sorts players by score.
+            //1-Add: 500 = "Ahmed", 200 = "Sara", 800 = "Ali", 350 = "Mona"
+            //2-Print all entries(they should be sorted by score automatically)
+            //3-Access the first key and first value
+            //4-Check if score 500 exists
+            //5-Safely get the player with score 999
+            //6-Remove the player with score 200 and print the updated list
+
+            //Step 1: Add players 
+            SortedList<int, string> leaderboard = new SortedList<int, string>();
+            leaderboard.Add(500, "Ahmed");
+            leaderboard.Add(200, "Sara");
+            leaderboard.Add(800, "Ali");
+            leaderboard.Add(350, "Mona");
+
+            //Step 2: Print all entries  
+            Console.WriteLine("\n=== Leaderboard (Sorted by Score) ===");
+            foreach (KeyValuePair<int, string> entry in leaderboard)
+                Console.WriteLine($" Score: {entry.Key} -> Player: {entry.Value}");
+
+            //Step 3: Access first key and first value 
+            Console.WriteLine("\n=== First Entry ===");
+            Console.WriteLine($" First Key   : {leaderboard.Keys[0]}");
+            Console.WriteLine($" First Value : {leaderboard.Values[0]}");
+
+            //Step 4: Check if score 500 exists 
+            Console.WriteLine("\n=== Check Score 500 ===");
+            Console.WriteLine($" ContainsKey(500): {leaderboard.ContainsKey(500)}");
+
+            //Step 5: Safely get the player with score 999 
+            Console.WriteLine("\n=== Safe Lookup: Score 999 ===");
+            if (leaderboard.TryGetValue(999, out string? playerName))
+                Console.WriteLine($" Player: {playerName}");
+            else
+                Console.WriteLine(" No player found ");
+
+            //Step 6: Remove score 200 and print updated list 
+            leaderboard.Remove(200);
+            Console.WriteLine("\n=== Updated Leaderboard (After Removing Score 200) ===");
+            foreach (KeyValuePair<int, string> entry in leaderboard)
+                Console.WriteLine($"  Score: {entry.Key} -> Player: {entry.Value}");
             #endregion
         }
     }
