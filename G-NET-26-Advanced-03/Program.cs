@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.VisualBasic;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Numerics;
+using System.Xml.Linq;
 using static System.Formats.Asn1.AsnWriter;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace G_NET_26_Advanced_03
@@ -113,6 +117,73 @@ namespace G_NET_26_Advanced_03
             Console.WriteLine("\n=== Updated Leaderboard (After Removing Score 200) ===");
             foreach (KeyValuePair<int, string> entry in leaderboard)
                 Console.WriteLine($"  Score: {entry.Key} -> Player: {entry.Value}");
+            #endregion
+
+            #region Exercise 3: Phone Book
+            //Build a phone book application.
+            //1-Create a Collection with 4 contacts(name → phone number)
+            //2-Add a new contact using [] syntax (add or update)
+            //3-Try adding a duplicate using .Add() — catch the exception and print the error
+            //4-Try adding a duplicate using .TryAdd() — print whether it succeeded
+            //5-Search for a contact that doesn’t exist
+            //6-Get a contact with a fallback of "Not Found"
+            //7-Print all Keys on one line, then all Values on another line
+
+            //Step 1: Create collection with 4 contacts 
+            Dictionary<string, string> phoneBook = new()
+            {
+                ["Ahmed"] = "01001234567",
+                ["Sara"] = "01119876543",
+                ["Ali"] = "01234567890",
+                ["Mona"] = "01556781234"
+            };
+            Console.WriteLine("\n=== Phone Book ===");
+            foreach (KeyValuePair<string, string> contact in phoneBook)
+                Console.WriteLine($"  {contact.Key}: {contact.Value}");
+
+            //Step 2: Add or update using [] syntax 
+            phoneBook["Laila"] = "01098765432";   // adds new contact
+            phoneBook["Ahmed"] = "01001111111";   // updates existing contact
+            Console.WriteLine("\n=== After [] Add/Update ===");
+            foreach (KeyValuePair<string, string> contact in phoneBook)
+                Console.WriteLine($"  {contact.Key}: {contact.Value}");
+
+            //Step 3: Try adding a duplicate with .Add() → catch exception 
+            Console.WriteLine("\n=== Add() Duplicate ===");
+            try
+            {
+                phoneBook.Add("Sara", "00000000000");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($" Error: {ex.Message}");
+            }
+
+            //Step 4: Try adding a duplicate with .TryAdd() 
+            Console.WriteLine("\n=== TryAdd() Duplicate ===");
+            bool added = phoneBook.TryAdd("Ali", "00000000000"); 
+            Console.WriteLine($" TryAdd(\"Ali\"): {added}");   
+
+            //Step 5: Search for a contact that doesn't exist 
+            Console.WriteLine("\n=== Search: Does 'Omar' Exist? ===");
+            Console.WriteLine($" ContainsKey(\"Omar\"): {phoneBook.ContainsKey("Omar")}");
+
+            if (phoneBook.TryGetValue("Omar", out string? omarPhone))
+                Console.WriteLine($"  Omar's number: {omarPhone}");
+            else
+                Console.WriteLine("  Omar was not found in the phone book");
+
+            //Step 6: Get a contact with fallback value 
+            Console.WriteLine("\n=== Get with Fallback ===");
+            string result = phoneBook.GetValueOrDefault("Omar", "Not Found");
+            Console.WriteLine($" Omar's number: {result}");
+
+            //Step 7: Print all Keys then all Values 
+            Console.WriteLine("\n=== All Keys ===");
+            Console.WriteLine( string.Join(", ", phoneBook.Keys));
+
+            Console.WriteLine("\n=== All Values ===");
+            Console.WriteLine( string.Join(", ", phoneBook.Values));
             #endregion
         }
     }
