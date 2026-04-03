@@ -299,8 +299,56 @@ namespace G_NET_26_Advanced_03
                 Console.WriteLine($"  Dequeued: {dequeueResult}");
             else
                 Console.WriteLine($"  TryDequeue returned: {success} — queue is empty, no exception thrown");
+            #endregion
 
+            #region Exercise 6: Browser History (Undo)
+            //Simulate browser back / forward
+            //1-Create a Stack<string> for browser history
+            //2-Push 5 URLs: "google.com", "github.com", "stackoverflow.com", "youtube.com", "claude.ai"
+            //3-Use Peek to see the current page(top of stack)
+            //4-Press "back" 3 times using Pop — print each page you leave
+            //5-Print the current page after going back
+            //6-Try TryPop on an empty stack — what happens?
 
+            //Step 1 & 2: Create Stack and push 5 URLs 
+            Stack<string> history = new Stack<string>();
+
+            history.Push("google.com");
+            history.Push("github.com");
+            history.Push("stackoverflow.com");
+            history.Push("youtube.com");
+            history.Push("claude.ai");
+
+            Console.WriteLine("\n=== Browser History ===");
+            PrintCollection(history);
+
+            //Step 3: Peek — see current page without going back 
+            Console.WriteLine("\n=== Current Page (Peek) ===");
+            Console.WriteLine($" Current: {history.Peek()}");
+
+            //Step 4: Press back 3 times using Pop 
+            Console.WriteLine("\n=== Pressing Back 3 Times ===");
+            for (int i = 0; i < 3; i++)
+            {
+                string page = history.Pop();
+                Console.WriteLine($" Leaving: {page}");
+            }
+
+            //Step 5: Print current page after going back 
+            Console.WriteLine("\n=== Current Page After Going Back ===");
+            Console.WriteLine($"  Current: {history.Peek()}");
+
+            //Step 6: TryPop on empty stack 
+            Console.WriteLine("\n=== TryPop on Empty Stack ===");
+
+            history.Pop();
+            history.Pop();
+
+            bool successPop = history.TryPop(out string? popResult);
+            if (successPop)
+                Console.WriteLine($"  Popped: {popResult}");
+            else
+                Console.WriteLine($"  TryPop returned: {success} — stack is empty, no exception thrown");
 
             #endregion
         }
