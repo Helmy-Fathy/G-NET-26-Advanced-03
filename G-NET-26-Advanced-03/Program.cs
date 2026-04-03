@@ -3,8 +3,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Globalization;
 using System.Numerics;
+using System.Reflection;
+using System.Runtime.Intrinsics.X86;
 using System.Xml;
 using System.Xml.Linq;
 using static System.Formats.Asn1.AsnWriter;
@@ -251,6 +254,53 @@ namespace G_NET_26_Advanced_03
             HashSet<int> small = [1, 2];
             Console.WriteLine($"\n=== Is {{1,2}} a subset of Set A? ===");
             Console.WriteLine($"  IsSubsetOf(setA): {small.IsSubsetOf(setA)}");
+
+            #endregion
+
+            #region Exercise 5: Print Queue Simulator
+            //Simulate a printer queue
+            //1-Create a Queue<string> and enqueue 5 documents: "Report.pdf", "Invoice.pdf", "Letter.docx", "Resume.pdf", "Photo.jpg"
+            //2-Print the queue contents and Count
+            //3-Use Peek to see which document will print next(without removing)
+            //4-Process the queue: Dequeue each document and print "Printing: [name]"
+            //5-Try TryDequeue on the now - empty queue — what happens?
+
+            //Step 1: Create Queue and enqueue 5 documents 
+            Queue<string> printQueue = new Queue<string>();
+
+            printQueue.Enqueue("Report.pdf");
+            printQueue.Enqueue("Invoice.pdf");
+            printQueue.Enqueue("Letter.docx");
+            printQueue.Enqueue("Resume.pdf");
+            printQueue.Enqueue("Photo.jpg");
+
+            //Step 2: Print queue contents and Count 
+            Console.WriteLine("\n=== Print Queue ===");
+            PrintCollection(printQueue);
+            Console.WriteLine($" Count: {printQueue.Count}");
+
+            //Step 3: Peek — see next without removing 
+            Console.WriteLine("\n=== Next Document (Peek) ===");
+            Console.WriteLine($" Next to print: {printQueue.Peek()}");
+
+            //Step 4: Dequeue and process each document 
+            Console.WriteLine("\n=== Processing Queue ===");
+            while (printQueue.Count > 0)
+            {
+                string doc = printQueue.Dequeue();
+                Console.WriteLine($" Printing: {doc}");
+            }
+            Console.WriteLine($"  Queue empty — Count: {printQueue.Count}");
+
+            //Step 4: TryDequeue on empty queue 
+            Console.WriteLine("\n=== TryDequeue on Empty Queue ===");
+            bool success = printQueue.TryDequeue(out string? dequeueResult);
+            if (success)
+                Console.WriteLine($"  Dequeued: {dequeueResult}");
+            else
+                Console.WriteLine($"  TryDequeue returned: {success} — queue is empty, no exception thrown");
+
+
 
             #endregion
         }
